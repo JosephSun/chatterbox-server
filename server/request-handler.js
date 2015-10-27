@@ -21,23 +21,41 @@ exports.requestHandler = function(request, response) {
   // headers and URL, and about the outgoing response, such as its status
   // and content.
   //
+  response._data = {}; 
   var returnObj = {}; 
-  if (request._postData !== undefined) {
-    results.push(request._postData.username, request._.postData.message);
-    returnObj[results] = results; 
+  console.log("request.url", request.url, "request.url.slice(0,2)", request.url.slice(0,2));
+  console.log("response._data", response._data);
+  if (request.url.slice(0,2) !== '/c'){
+    var statusCode = 404; 
+  }else if (request.method === 'POST') {
+    console.log("THIS IS A POST &&&&&&&&&&&&&&&&&&&&&%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    console.log('request._postData', request._postData);
+    var statusCode = 201; 
+    if (request._postData !== undefined) {
+      results.push(/*request._postData.username,*/ request._postData);
+      console.log('THESE ARE THE RSULTS after IF', results);
+
+    }
+  }else {
+    var statusCode = 200;
+    
   }
+  response._data['results'] = results; 
+  returnObj['results'] = results; 
+  console.log("response._data AFTER ADDING RESULTS@@@@@@@@", response._data);
+
   //console.log('request', request,"\n", 'response', response);
   // Documentation for both request and response can be found in the HTTP section at
   // http://nodejs.org/documentation/api/
   // Do some basic logging.
   //
+  console.log("request", request, 'response', response, "returnObj",returnObj , 'response._data',response._data );
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
 
   // See the note below about CORS headers.
   var headers = exports.defaultCorsHeaders;
@@ -57,8 +75,12 @@ exports.requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  console.log("request", request, 'response', response);
-  response.end(JSON.stringify(returnObj));
+  // if (returnObj.results.length !== 0){
+  //   response.end(JSON.stringify(returnObj[results]));
+  // }else {
+    
+  // }
+    response.end(JSON.stringify(response._data));
 
 };
 // exports.requestHandler(); 
