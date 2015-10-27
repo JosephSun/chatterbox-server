@@ -26,7 +26,7 @@ describe('Node Server Request Listener Function', function() {
   it('Should send back parsable stringified JSON', function() {
     var req = new stubs.request('/classes/room1', 'GET');
     var res = new stubs.response();
-
+    console.log("*****SHOULD SEND BACK PARSABLE STRINGIFIED JSON****");
     handler.requestHandler(req, res);
 
     expect(JSON.parse.bind(this, res._data)).to.not.throw();
@@ -36,7 +36,7 @@ describe('Node Server Request Listener Function', function() {
   it('Should send back an object', function() {
     var req = new stubs.request('/classes/room1', 'GET');
     var res = new stubs.response();
-
+    console.log("*****SHOULD SEND BACK AN OBJECT*****");
     handler.requestHandler(req, res);
 
     var parsedBody = JSON.parse(res._data);
@@ -47,6 +47,7 @@ describe('Node Server Request Listener Function', function() {
   it('Should send an object containing a `results` array', function() {
     var req = new stubs.request('/classes/room1', 'GET');
     var res = new stubs.response();
+    console.log("******SHOULD SEND AN OBJECT CONAINING A RESULTS ARRAY****");
 
     handler.requestHandler(req, res);
 
@@ -63,6 +64,7 @@ describe('Node Server Request Listener Function', function() {
     };
     var req = new stubs.request('/classes/room1', 'POST', stubMsg);
     var res = new stubs.response();
+    console.log("****SHOULD ACCEPT POSTS TO /CLASSES/ROOM******");
 
     handler.requestHandler(req, res);
 
@@ -82,6 +84,7 @@ it('Should respond with messages that were previously posted', function() {
     };
     var req = new stubs.request('/classes/room1', 'POST', stubMsg);
     var res = new stubs.response();
+    console.log("****SHOULD RESPONSD WITH MESSAGES THAT WERE PREVIOUSLY POSTED******");
 
     handler.requestHandler(req, res);
 
@@ -105,6 +108,7 @@ it('Should respond with messages that were previously posted', function() {
   it('Should 404 when asked for a nonexistent file', function() {
     var req = new stubs.request('/arglebargle', 'GET');
     var res = new stubs.response();
+    console.log("*****SHOULD 404 WHEN ASKED FOR A NONEXISTENT FILE*****");
 
     handler.requestHandler(req, res);
 
