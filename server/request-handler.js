@@ -14,6 +14,14 @@ this file and include it in basic-server.js so that it actually works.
 var results = [];
 var exports = module.exports = {};
 //URL FROM CHATTERBOX CLIENT: 'https://api.parse.com/1/classes/chatterbox',
+var sendResponse = function(response, data,status){//Put this so we would not repeat ourselves. We would have repeated the body of this function multiple times in the if statements if we did not have this code
+    response.writeHead(status, headers);//for the GET request we will need a data variable. We need a status variable as well for our writeHead Function. 
+    response.end(JSON.stringify(response._data));
+
+
+};
+
+
 exports.requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -21,35 +29,38 @@ exports.requestHandler = function(request, response) {
   // headers and URL, and about the outgoing response, such as its status
   // and content.
   //
-  response._data = {}; 
-  var returnObj = {}; 
-  console.log("request.url", request.url, "request.url.slice(0,2)", request.url.slice(0,2));
-  console.log("response._data", response._data);
-  if (request.url.slice(0,2) !== '/c'){
-    var statusCode = 404; 
-  }else if (request.method === 'POST') {
-    console.log("THIS IS A POST &&&&&&&&&&&&&&&&&&&&&%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    console.log('request._postData', request._postData);
-    var statusCode = 201; 
-    if (request._postData !== undefined) {
-      results.push(/*request._postData.username,*/ request._postData);
-      console.log('THESE ARE THE RSULTS after IF', results);
+  var statusCode = 200;//default statusCode; meaning everything is okay. 
 
-    }
-  }else {
-    var statusCode = 200;
-    
+  if (request.method === "GET") {//if the server is recieving a GET request. That is to say that the user wants information. 
+    sendResponse(response, "Hello World",statusCode);
+  }else if (request.method === "POST") {//if the server is recieving a POST request. That is to say that the user is giving information to the server.
+    sendResponse(response);
   }
-  response._data['results'] = results; 
-  returnObj['results'] = results; 
-  console.log("response._data AFTER ADDING RESULTS@@@@@@@@", response._data);
 
-  //console.log('request', request,"\n", 'response', response);
+  // response._data = {}; 
+  // var returnObj = {}; 
+ 
+  // if (request.url.slice(0,2) !== '/c'){
+  //   var statusCode = 404; 
+  // }else if (request.method === 'POST') {
+  //   console.log("THIS IS A POST &&&&&&&&&&&&&&&&&&&&&%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  //   console.log('request._postData', request._postData);
+  //   var statusCode = 201; 
+  //   if (request._postData !== undefined) {
+  //     results.push(/*request._postData.username,*/ request._postData);
+  //     console.log('THESE ARE THE RSULTS after IF', results);
+
+  //   }
+  // }else {
+    
+  // }
+  // response._data['results'] = results; 
+  // returnObj['results'] = results; 
+
   // Documentation for both request and response can be found in the HTTP section at
   // http://nodejs.org/documentation/api/
   // Do some basic logging.
   //
-  console.log("request", request, 'response', response, "returnObj",returnObj , 'response._data',response._data );
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
@@ -62,8 +73,8 @@ exports.requestHandler = function(request, response) {
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
-  // other than plain text, like JSON or HTML.YO JOSEPH CHANGE THIS; MAYBE, PROBALY, MOST LIKELY to JSON
-  headers['Content-Type'] = 'application/json'//"text/plain";
+  // other than plain text, like JSON or HTML.
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
